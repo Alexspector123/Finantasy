@@ -73,7 +73,7 @@ public class EventHandler {
                     gamePanel.stopMusic();
                     gamePanel.playMusic(3);
                     gamePanel.gameState = gamePanel.battleState;
-                    gamePanel.ui.indexBattle = 1;
+                    gamePanel.battleSystem.indexBattle = 1;
                 }
             }
 
@@ -82,7 +82,7 @@ public class EventHandler {
                     gamePanel.stopMusic();
                     gamePanel.playMusic(3);
                     gamePanel.gameState = gamePanel.battleState;
-                    gamePanel.ui.indexBattle = 2;
+                    gamePanel.battleSystem.indexBattle = 2;
                 }
             }
             if(hit(0,14,17,"any") == true || hit(0,14,16,"any") == true ||  hit(0,14,15,"any") == true) {
@@ -90,7 +90,7 @@ public class EventHandler {
                     gamePanel.stopMusic();
                     gamePanel.playMusic(3);
                     gamePanel.gameState = gamePanel.battleState;
-                    gamePanel.ui.indexBattle = 3;
+                    gamePanel.battleSystem.indexBattle = 3;
                 }
             }
 
@@ -106,7 +106,7 @@ public class EventHandler {
                         gamePanel.stopMusic();
                         gamePanel.playMusic(4);
                         gamePanel.gameState = gamePanel.battleState;
-                        gamePanel.ui.indexBattle = 7;
+                        gamePanel.battleSystem.indexBattle = 7;
                         checkHappened[5] = true;
             }
         // HIT LEFT COLUMN TO ENTER BATTLE:
@@ -120,7 +120,7 @@ public class EventHandler {
                         gamePanel.stopMusic();
                         gamePanel.playMusic(4);
                         gamePanel.gameState = gamePanel.battleState;
-                        gamePanel.ui.indexBattle = 8;
+                        gamePanel.battleSystem.indexBattle = 8;
                         checkHappened[4] = true;
             }
         // HIT SLIME TO START SLIME BATTLE:
@@ -129,7 +129,7 @@ public class EventHandler {
                 gamePanel.stopMusic();
                 gamePanel.playMusic(4);
                 gamePanel.gameState = gamePanel.battleState;
-                gamePanel.ui.indexBattle = 4;
+                gamePanel.battleSystem.indexBattle = 4;
                 checkHappened[0] = true;
                 
             }
@@ -139,7 +139,7 @@ public class EventHandler {
                 gamePanel.stopMusic();
                 gamePanel.playMusic(4);
                 gamePanel.gameState = gamePanel.battleState;
-                gamePanel.ui.indexBattle = 6;
+                gamePanel.battleSystem.indexBattle = 6;
                 checkHappened[1] = true;
             }
         // HIT SPIDER TO START SPIDER BATTLE
@@ -148,7 +148,7 @@ public class EventHandler {
                 gamePanel.stopMusic();
                 gamePanel.playMusic(4);
                 gamePanel.gameState = gamePanel.battleState;
-                gamePanel.ui.indexBattle = 5;
+                gamePanel.battleSystem.indexBattle = 5;
                 checkHappened[2] = true;
             }
         // HIT BOSS TO START BOSS BATTLE
@@ -157,14 +157,14 @@ public class EventHandler {
                 gamePanel.stopMusic();
                 gamePanel.playMusic(4);
                 gamePanel.gameState = gamePanel.battleState;
-                gamePanel.ui.indexBattle = 9;
+                gamePanel.battleSystem.indexBattle = 9;
             }
             // BOSS
             if(gamePanel.bossBattleOn) {
                 gamePanel.stopMusic();
                 gamePanel.playMusic(4);
                 gamePanel.gameState = gamePanel.bossBattleState;
-                gamePanel.ui.indexBattle = 10;
+                gamePanel.battleSystem.indexBattle = 10;
             }
         }
     }

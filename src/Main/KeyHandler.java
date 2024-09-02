@@ -219,32 +219,32 @@ public class KeyHandler implements KeyListener {
     }
         // BATTLE STATE
         public void battleState(int code){
-        if(gamePanel.ui.orderTurn == 0){
+        if(gamePanel.battleSystem.orderTurn == 0){
             if(code == KeyEvent.VK_W){
-                gamePanel.ui.interactNum--;
-                if(gamePanel.ui.interactNum == -1){
-                    gamePanel.ui.interactNum = gamePanel.ui.numberOfInteractNum;
+                gamePanel.battleSystem.interactNum--;
+                if(gamePanel.battleSystem.interactNum == -1){
+                    gamePanel.battleSystem.interactNum = gamePanel.battleSystem.numberOfInteractNum;
                 }
             }
             if(code == KeyEvent.VK_S){
-                gamePanel.ui.interactNum++;
-                if(gamePanel.ui.interactNum > gamePanel.ui.numberOfInteractNum){
-                    gamePanel.ui.interactNum = 0;
+                gamePanel.battleSystem.interactNum++;
+                if(gamePanel.battleSystem.interactNum > gamePanel.battleSystem.numberOfInteractNum){
+                    gamePanel.battleSystem.interactNum = 0;
                 }
             }
             if(code == KeyEvent.VK_ENTER){
-                if(gamePanel.ui.interactType < 2){
-                    gamePanel.ui.interactType++;
+                if(gamePanel.battleSystem.interactType < 2){
+                    gamePanel.battleSystem.interactType++;
                 }
-                else if(gamePanel.ui.interactType == 2){
-                    gamePanel.ui.interactType = 0;
-                    gamePanel.player.battleAction(gamePanel.ui.selectAction, gamePanel.ui.choosingEquipAction, gamePanel.ui.choosingEnemyAction);
+                else if(gamePanel.battleSystem.interactType == 2){
+                    gamePanel.battleSystem.interactType = 0;
+                    gamePanel.player.battleAction(gamePanel.battleSystem.selectAction, gamePanel.battleSystem.choosingEquipAction, gamePanel.battleSystem.choosingEnemyAction);
                 }
-                gamePanel.ui.interactNum = 0;
+                gamePanel.battleSystem.interactNum = 0;
             }
             if(code == KeyEvent.VK_ESCAPE){
-                if(gamePanel.ui.interactType > 0){
-                    gamePanel.ui.interactType--;
+                if(gamePanel.battleSystem.interactType > 0){
+                    gamePanel.battleSystem.interactType--;
                 }
             }
         }

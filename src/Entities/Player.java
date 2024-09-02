@@ -253,16 +253,16 @@ public class Player extends Entity{
     }
     public void damageMonster(int choosingEquipAction, int choosingEnemyAction){
 
-        gamePanel.ui.listofMonster.get(choosingEnemyAction).state = gamePanel.ui.listofMonster.get(choosingEnemyAction).getDamageState;
-        int damage = attack - gamePanel.ui.listofMonster.get(choosingEnemyAction).defense;
+        gamePanel.battleSystem.listofMonster.get(choosingEnemyAction).state = gamePanel.battleSystem.listofMonster.get(choosingEnemyAction).getDamageState;
+        int damage = attack - gamePanel.battleSystem.listofMonster.get(choosingEnemyAction).defense;
         if(damage < 0){
             damage = 0;
         }
         else{
-            inventory.get(choosingEquipAction).use(gamePanel.ui.listofMonster.get(choosingEnemyAction));
-            damage = attack - gamePanel.ui.listofMonster.get(choosingEnemyAction).defense;
+            inventory.get(choosingEquipAction).use(gamePanel.battleSystem.listofMonster.get(choosingEnemyAction));
+            damage = attack - gamePanel.battleSystem.listofMonster.get(choosingEnemyAction).defense;
         }
-        gamePanel.ui.listofMonster.get(choosingEnemyAction).life -= damage;
+        gamePanel.battleSystem.listofMonster.get(choosingEnemyAction).life -= damage;
         gamePanel.ui.addMessage(damage + " damage!");
     }
     public void defensePlayer(int choosingEquipAction){
@@ -272,7 +272,7 @@ public class Player extends Entity{
     }
 public void battleAction(int selectAction, int choosingEquipAction, int choosingEnemyAction){
         if(preState == stunState){
-            gamePanel.ui.orderTurn++;
+            gamePanel.battleSystem.orderTurn++;
             preState = normalState;
         }
         else{
@@ -298,7 +298,7 @@ public void battleAction(int selectAction, int choosingEquipAction, int choosing
                     selectedItem.use(this);
                 }
                 else{
-                    selectedItem.use(gamePanel.ui.listofMonster.get(choosingEnemyAction));
+                    selectedItem.use(gamePanel.battleSystem.listofMonster.get(choosingEnemyAction));
                 }
                 if(selectedItem.amount > 0){
                     inventory.get(choosingEquipAction).amount--;

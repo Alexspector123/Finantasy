@@ -27,6 +27,8 @@ import Monster.MON_Spider;
 import Monster.MonsterFactory;
 import Objects.*;
 
+import Main.BattleSystem;
+
 public class UI {
     GamePanel gamePanel;
 
@@ -88,30 +90,21 @@ public class UI {
             // TRADE BUTTONS
                 public int tradeCommandNum = 0;
 
+    public Entity npc;
 
-    public ArrayList<Entity> listofMonster = new ArrayList<>();
+    // effect attribute
     public boolean effect = false;
-    boolean checker = false;
-    public int indexBattle = 0;
-    public int orderTurn = 0; // 0 for player
-    public int interactNum = 0;  // 0 for stuff 1, stuff 2, stuff 3
-    public int interactType = 0; // 0 for selection, 1 for choosing equipment, 2 for choosing enemy
-    public int selectAction = 0;
-    public int choosingEquipAction = 0;
-    public int choosingEnemyAction = 0;
-    public int numberOfInteractNum = interactNum;
     public int effectPosX;     // Using arraylist when AOE skill
     public int effectPosY;     // Using arraylist when AOE skill
     int effecttedNo;    // Using arraylist when AOE skill
     Entity effectted;      // Using arraylist when AOE skillint preEffectedState = 0;
-
-    public Entity npc;
 
     //Boss event
     public static int gateCounterKill = 0;
     int scaleFactor = 3;
 
     public UI(GamePanel gamePanel){
+
             this.gamePanel = gamePanel;
         // GET UI IMAGES:
          getUIImage();
@@ -186,9 +179,9 @@ public class UI {
         else if(gamePanel.gameState == gamePanel.gameOverState){
             drawGameOverScreen();
         }
-        else if(gamePanel.gameState == gamePanel.bossBattleState){
+       /*  else if(gamePanel.gameState == gamePanel.bossBattleState){
             drawBattleBossScreen();
-        }
+        }*/
         // TRADE STATE:
         else if(gamePanel.gameState == gamePanel.tradeState){
             drawTradeScreen();
@@ -665,28 +658,22 @@ public class UI {
                 int frameX = 0;
                 int frameY = 0;
 
-                if(indexBattle == 1){
+                if(gamePanel.battleSystem.indexBattle == 1){
                     // DRAW FRAME:
                     g2.drawImage(battleFrameScreen,frameX,frameY,null);
                 }
-                if(indexBattle == 2){
+                if(gamePanel.battleSystem.indexBattle == 2){
                     // DRAW FRAME:
                     g2.drawImage(battleFrameScreen,frameX,frameY,null);
                 }
-                if(indexBattle == 3){
+                if(gamePanel.battleSystem.indexBattle == 3){
                     // DRAW FRAME:
                     g2.drawImage(battleFrameScreen,frameX,frameY,null);
                 } else {
                     g2.drawImage(battleFrameScreen,frameX,frameY,null);
                 }
 
-            // SET MONSTER
-                if(checker == false)
-                {
-                    listofMonster = new ArrayList<>();
-                    addMonster(indexBattle);
-                    checker = true;
-                }
+                gamePanel.battleSystem.resetMonster();
 
                 int frameHeight;
                 int frameWidth;
@@ -706,10 +693,10 @@ public class UI {
                 g2.setColor(Color.WHITE);
                 g2.setFont(g2.getFont().deriveFont(20F));
 
-                for(int i=0; i < listofMonster.size(); i++){
-                    if(listofMonster.get(i) != null && listofMonster.get(i).dying == false){
-                        g2.drawString(listofMonster.get(i).name, nameX, nameY);
-                        g2.drawString(listofMonster.get(i).life + "/" + listofMonster.get(i).maxLife, nameX+gamePanel.tileSize * 4 - 7, nameY);
+                for(int i=0; i < gamePanel.battleSystem.listofMonster.size(); i++){
+                    if(gamePanel.battleSystem.listofMonster.get(i) != null && gamePanel.battleSystem.listofMonster.get(i).dying == false){
+                        g2.drawString(gamePanel.battleSystem.listofMonster.get(i).name, nameX, nameY);
+                        g2.drawString(gamePanel.battleSystem.listofMonster.get(i).life + "/" + gamePanel.battleSystem.listofMonster.get(i).maxLife, nameX+gamePanel.tileSize * 4 - 7, nameY);
                         nameY += 40;
                     }
                 }
@@ -738,30 +725,30 @@ public class UI {
                 int PositionX = initialPostionX;
                 int PositionY = gamePanel.tileSize * 2 - 40;
 
-                if ( listofMonster.size() == 3 ) {
-                     PositionY = 370 / listofMonster.size() + 40;
-                } else if ( listofMonster.size() == 2 ) {
-                    PositionY = 370 / listofMonster.size() + 20;
-                } else if (indexBattle == 9) {
+                if ( gamePanel.battleSystem.listofMonster.size() == 3 ) {
+                     PositionY = 370 / gamePanel.battleSystem.listofMonster.size() + 40;
+                } else if ( gamePanel.battleSystem.listofMonster.size() == 2 ) {
+                    PositionY = 370 / gamePanel.battleSystem.listofMonster.size() + 20;
+                } else if (gamePanel.battleSystem.indexBattle == 9) {
                     PositionX = gamePanel.tileSize * 2 + 40;
                     effectPosX = PositionX * 4;
                     effectPosY = PositionY * 6;
-                } else if (listofMonster.size() == 1) {
-                    for (int i = 0; i < listofMonster.size(); i++) {
-                        if (listofMonster.get(i).name.equalsIgnoreCase("Spider")) {
+                } else if (gamePanel.battleSystem.listofMonster.size() == 1) {
+                    for (int i = 0; i < gamePanel.battleSystem.listofMonster.size(); i++) {
+                        if (gamePanel.battleSystem.listofMonster.get(i).name.equalsIgnoreCase("Spider")) {
                             PositionX = initialPostionX - 60;
                             PositionY = gamePanel.tileSize * 4;
 
-                        } else if (listofMonster.get(i).name.equalsIgnoreCase("Slime")) {
+                        } else if (gamePanel.battleSystem.listofMonster.get(i).name.equalsIgnoreCase("Slime")) {
                             PositionX = initialPostionX - 60;
                             PositionY = gamePanel.tileSize * 4 - 20;
 
-                        } else if (listofMonster.get(i).name.equalsIgnoreCase("Gate Keeper")) {
+                        } else if (gamePanel.battleSystem.listofMonster.get(i).name.equalsIgnoreCase("Gate Keeper")) {
                             PositionX = initialPostionX - 60;
                             PositionY = gamePanel.tileSize * 2;
                             effectPosX += gamePanel.tileSize * 2;
                             effectPosY += gamePanel.tileSize * 2;
-                        } else if (listofMonster.get(i).name.equalsIgnoreCase("Robot")) {
+                        } else if (gamePanel.battleSystem.listofMonster.get(i).name.equalsIgnoreCase("Robot")) {
                             PositionX = initialPostionX - 60;
                             PositionY = gamePanel.tileSize * 4;
                             effectPosX += gamePanel.tileSize;
@@ -770,50 +757,50 @@ public class UI {
                     }
                 }
 
-                for(int i=0; i<listofMonster.size(); i++){
-                    if(listofMonster.get(i) != null && listofMonster.get(i).dying == false){
-                        if(listofMonster.get(i).life <= 0){
-                            gamePanel.player.exp += listofMonster.get(i).exp;
-                            gamePanel.player.coin += listofMonster.get(i).coin;
-                            listofMonster.get(i).dying = true;
+                for(int i=0; i<gamePanel.battleSystem.listofMonster.size(); i++){
+                    if(gamePanel.battleSystem.listofMonster.get(i) != null && gamePanel.battleSystem.listofMonster.get(i).dying == false){
+                        if(gamePanel.battleSystem.listofMonster.get(i).life <= 0){
+                            gamePanel.player.exp += gamePanel.battleSystem.listofMonster.get(i).exp;
+                            gamePanel.player.coin += gamePanel.battleSystem.listofMonster.get(i).coin;
+                            gamePanel.battleSystem.listofMonster.get(i).dying = true;
                         }
                         else{
-                            if(i == (orderTurn - 1) && listofMonster.get(i).preState != listofMonster.get(i).stunState){
+                            if(i == (gamePanel.battleSystem.orderTurn - 1) && gamePanel.battleSystem.listofMonster.get(i).preState != gamePanel.battleSystem.listofMonster.get(i).stunState){
                                 PositionX += gamePanel.tileSize * 2;
-                                g2.drawImage(listofMonster.get(i).left1, PositionX, PositionY, null);
+                                g2.drawImage(gamePanel.battleSystem.listofMonster.get(i).left1, PositionX, PositionY, null);
                             } else {
-                                g2.drawImage(listofMonster.get(i).right1, PositionX, PositionY, null);
+                                g2.drawImage(gamePanel.battleSystem.listofMonster.get(i).right1, PositionX, PositionY, null);
                             }
                         }
                     }
-                    if(listofMonster.get(i).state != listofMonster.get(i).normalState){
+                    if(gamePanel.battleSystem.listofMonster.get(i).state != gamePanel.battleSystem.listofMonster.get(i).normalState){
                         effectPosX = PositionX;
                         effectPosY = PositionY;
-                        if (listofMonster.get(i).name.equalsIgnoreCase("Spider")){
+                        if (gamePanel.battleSystem.listofMonster.get(i).name.equalsIgnoreCase("Spider")){
                             effectPosX += gamePanel.tileSize;
                             effectPosY += gamePanel.tileSize;
-                        } else if (listofMonster.get(i).name.equalsIgnoreCase("Deadly Slime")){
+                        } else if (gamePanel.battleSystem.listofMonster.get(i).name.equalsIgnoreCase("Deadly Slime")){
                             effectPosX += gamePanel.tileSize;
                             effectPosY += gamePanel.tileSize;
-                        } else if (listofMonster.get(i).name.equalsIgnoreCase("Gate Keeper")) {
+                        } else if (gamePanel.battleSystem.listofMonster.get(i).name.equalsIgnoreCase("Gate Keeper")) {
                             effectPosX += gamePanel.tileSize;
                             effectPosY += gamePanel.tileSize;
-                        } else if (listofMonster.get(i).name.equalsIgnoreCase("Robot")) {
+                        } else if (gamePanel.battleSystem.listofMonster.get(i).name.equalsIgnoreCase("Robot")) {
                             effectPosX += gamePanel.tileSize - 10;
                             effectPosY += gamePanel.tileSize - 20;
-                        }else if (listofMonster.get(i).name.equalsIgnoreCase("Ghost Rider")) {
+                        }else if (gamePanel.battleSystem.listofMonster.get(i).name.equalsIgnoreCase("Ghost Rider")) {
                             effectPosX += gamePanel.tileSize - 20;
                             effectPosY += gamePanel.tileSize - 30;
-                        }else if (indexBattle == 9) {
+                        }else if (gamePanel.battleSystem.indexBattle == 9) {
                             effectPosX = PositionX * 2;
                             effectPosY = PositionY * 3;
                         }
                     }
 
                     PositionX = initialPostionX;
-                    if ( listofMonster.size() == 3 ) {
+                    if ( gamePanel.battleSystem.listofMonster.size() == 3 ) {
                         PositionY += gamePanel.tileSize + 40;
-                    } else if ( listofMonster.size() == 2 ) {
+                    } else if ( gamePanel.battleSystem.listofMonster.size() == 2 ) {
                         PositionY += gamePanel.tileSize + 50;
                     }
 
@@ -826,7 +813,7 @@ public class UI {
            // DRAW PLAYER
                 PositionX = gamePanel.tileSize * 11;
                 PositionY = 240;
-                if(orderTurn == 0){
+                if(gamePanel.battleSystem.orderTurn == 0){
                     PositionX = gamePanel.tileSize * 10;
                 }
                 if(gamePanel.player.state != gamePanel.player.normalState){
@@ -836,7 +823,7 @@ public class UI {
                 g2.drawImage(gamePanel.player.left1, PositionX, PositionY,null);
 
             // PRINT WHOSE TURN IS NEXT
-                if(orderTurn == 0){
+                if(gamePanel.battleSystem.orderTurn == 0){
                     textTurn = "Player's turn";
                 }
                 else{
@@ -849,7 +836,7 @@ public class UI {
                 }
                 else{
             // DRAW PLAYER INTERACT
-                    if(orderTurn == 0){
+                    if(gamePanel.battleSystem.orderTurn == 0){
 
                         frameX = gamePanel.tileSize*5;
                         frameY = gamePanel.tileSize*9;
@@ -859,43 +846,43 @@ public class UI {
                         int x = frameX + gamePanel.tileSize * 3 + 10;
                         int y = frameY + 45;
 
-                        if(interactType == 0 && orderTurn == 0){
+                        if(gamePanel.battleSystem.interactType == 0 && gamePanel.battleSystem.orderTurn == 0){
                             gamePanel.player.attack = gamePanel.player.strength;
                             gamePanel.player.defense = gamePanel.player.dexterity;
 
-                            numberOfInteractNum = 2;
+                            gamePanel.battleSystem.numberOfInteractNum = 2;
 
                             text = "Attack";
                             y = frameY + 45;
 
                             g2.drawString(text, x, y);
 
-                            if(interactNum == 0){
+                            if(gamePanel.battleSystem.interactNum == 0){
                             g2.drawString(">", x - 20, y);
                             }
                             text = "Defend";
                             y += 45;
                             g2.drawString(text, x, y);
-                            if(interactNum== 1){
+                            if(gamePanel.battleSystem.interactNum== 1){
                             g2.drawString(">", x - 20, y);
                             }
                             text = "Items";
                             y += 45;
                             g2.drawString(text, x, y);
-                            if(interactNum == 2){
+                            if(gamePanel.battleSystem.interactNum == 2){
                             g2.drawString(">", x - 20, y);
                     }
-                        selectAction = interactNum;
+                        gamePanel.battleSystem.selectAction = gamePanel.battleSystem.interactNum;
                         }
-                    else if (interactType == 1){
+                    else if (gamePanel.battleSystem.interactType == 1){
 
                         text = "";
                         x =  frameX + gamePanel.tileSize * 3 + 10;
                         y = frameY + 45;
-                        numberOfInteractNum = numberOfInteract() - 1;
+                        gamePanel.battleSystem.numberOfInteractNum = gamePanel.battleSystem.numberOfInteract() - 1;
 
-                        for(int i=0; i<numberOfInteract(); i++){
-                            if(interactNum == i){
+                        for(int i=0; i<gamePanel.battleSystem.numberOfInteract(); i++){
+                            if(gamePanel.battleSystem.interactNum == i){
                                 g2.drawString(">", x - 20, y);
                             }
                             y += 45;
@@ -904,10 +891,10 @@ public class UI {
                         int j = 0;
                         y = frameY + 45;
                         for(int i = 0; i<gamePanel.player.inventory.size(); i++){
-                            if((selectAction == 0 && (gamePanel.player.inventory.get(i).type == gamePanel.player.type_sword || gamePanel.player.inventory.get(i).type == gamePanel.player.type_dagger))
-                              || (selectAction == 1 && (gamePanel.player.inventory.get(i).type == gamePanel.player.type_shield))
-                              || (selectAction == 2 && (gamePanel.player.inventory.get(i).type == gamePanel.player.type_consumable_player || gamePanel.player.inventory.get(i).type == gamePanel.player.type_consumable_enemy))){
-                                    if(j == interactNum) choosingEquipAction = i;
+                            if((gamePanel.battleSystem.selectAction == 0 && (gamePanel.player.inventory.get(i).type == gamePanel.player.type_sword || gamePanel.player.inventory.get(i).type == gamePanel.player.type_dagger))
+                              || (gamePanel.battleSystem.selectAction == 1 && (gamePanel.player.inventory.get(i).type == gamePanel.player.type_shield))
+                              || (gamePanel.battleSystem.selectAction == 2 && (gamePanel.player.inventory.get(i).type == gamePanel.player.type_consumable_player || gamePanel.player.inventory.get(i).type == gamePanel.player.type_consumable_enemy))){
+                                    if(j == gamePanel.battleSystem.interactNum) gamePanel.battleSystem.choosingEquipAction = i;
                                     text = gamePanel.player.inventory.get(i).name;
                                     g2.drawString(text, x, y);
                                     y += 45;
@@ -916,25 +903,25 @@ public class UI {
                             }
                         }
                     }
-                    else if (interactType == 2){
+                    else if (gamePanel.battleSystem.interactType == 2){
 
                         text = "";
                         x = frameX + gamePanel.tileSize * 3 + 10;;
                         y = frameY + 45;
-                        numberOfInteractNum = numberOfInteract() - 1;
+                        gamePanel.battleSystem.numberOfInteractNum = gamePanel.battleSystem.numberOfInteract() - 1;
 
-                        if((selectAction == 2 && gamePanel.player.inventory.get(choosingEquipAction).type == gamePanel.player.type_consumable_player)
-                            || selectAction == 1){
+                        if((gamePanel.battleSystem.selectAction == 2 && gamePanel.player.inventory.get(gamePanel.battleSystem.choosingEquipAction).type == gamePanel.player.type_consumable_player)
+                            || gamePanel.battleSystem.selectAction == 1){
                             text = "Player";
                             g2.drawString(text, x, y);
-                            interactNum = 0;
+                            gamePanel.battleSystem.interactNum = 0;
                             g2.drawString(">", x - 20, y);
-                            choosingEnemyAction = 0;
+                            gamePanel.battleSystem.choosingEnemyAction = 0;
                         }
                         else
                         {
-                            for(int i=0; i<numberOfInteract(); i++){
-                                if(interactNum == i){
+                            for(int i=0; i<gamePanel.battleSystem.numberOfInteract(); i++){
+                                if(gamePanel.battleSystem.interactNum == i){
                                     g2.drawString(">", x - 20, y);
                                 }
                                 y += 45;
@@ -942,10 +929,10 @@ public class UI {
             // TO SELECT ENEMEY SUIT TO THE interactNum
                             int j = 0;
                             y = frameY + 45;
-                            for(int i = 0; i<listofMonster.size(); i++){
-                                if(listofMonster.get(i) != null && listofMonster.get(i).dying == false){
-                                        if(j == interactNum) choosingEnemyAction = i;
-                                        text = listofMonster.get(i).name;
+                            for(int i = 0; i<gamePanel.battleSystem.listofMonster.size(); i++){
+                                if(gamePanel.battleSystem.listofMonster.get(i) != null && gamePanel.battleSystem.listofMonster.get(i).dying == false){
+                                        if(j == gamePanel.battleSystem.interactNum) gamePanel.battleSystem.choosingEnemyAction = i;
+                                        text = gamePanel.battleSystem.listofMonster.get(i).name;
                                         g2.drawString(text, x, y);
                                         y += 45;
                                         j++;
@@ -954,8 +941,8 @@ public class UI {
                         }
                     }
                 }
-                    else if(orderTurn > 0){
-                        monsterTurn();
+                    else if(gamePanel.battleSystem.orderTurn > 0){
+                        gamePanel.battleSystem.monsterTurn();
             }
                 }
 
@@ -982,14 +969,14 @@ public class UI {
                 g2.drawString(textTurn, nameX, nameY);
             }
             // END OF THE BATTLE
-                if(checkBattleEnd() == true){
+                if(gamePanel.battleSystem.checkBattleEnd() == true){
                     gamePanel.stopMusic();
                     gamePanel.keyHandler.enterPressed = false;
-                    resetNum();
-                    orderTurn = 0;
-                    checker = false;
+                    gamePanel.battleSystem.resetNum();
+                    gamePanel.battleSystem.orderTurn = 0;
+                    gamePanel.battleSystem.checker = false;
                     handlerMonsters();
-                    listofMonster.clear();
+                    gamePanel.battleSystem.listofMonster.clear();
                     gamePanel.gameState = gamePanel.playState;
                     if ( gamePanel.currentMap == 0 && gamePanel.gameState == gamePanel.playState) {
                         gamePanel.playMusic(0);
@@ -1000,108 +987,8 @@ public class UI {
                     }
                 }
     }
-    // Count the number of interaction
-    public int numberOfInteract(){
-        int t = 0;
-        if(interactType == 1){
-            
-        for(int i = 0; i<gamePanel.player.inventory.size(); i++){
-            if((selectAction == 0 && (gamePanel.player.inventory.get(i).type == gamePanel.player.type_sword || gamePanel.player.inventory.get(i).type == gamePanel.player.type_dagger))
-                  || (selectAction == 1 && (gamePanel.player.inventory.get(i).type == gamePanel.player.type_shield))
-                  || (selectAction == 2 && (gamePanel.player.inventory.get(i).type == gamePanel.player.type_consumable_player || gamePanel.player.inventory.get(i).type == gamePanel.player.type_consumable_enemy))){
-                t++;
-                }
-            }
-        }
-        else if (interactType == 2){
-            if(selectAction == 2 && gamePanel.player.inventory.get(choosingEquipAction).type == gamePanel.player.type_consumable_player){
-                t = 1;
-            }
-            else{
-                for(int i = 0; i<listofMonster.size(); i++){
-                    if(listofMonster.get(i).dying == false)
-                    t++;
-                }
-            }
-        }
-        return t;
-    }
-    // Add monster due to the place (indexBattle)
-    public void addMonster(int index){
-        //Battle 1 in map 0
-        if(index == 1){
-            listofMonster.add(MonsterFactory.createMonster("Pumpkin", gamePanel));
-            listofMonster.add(MonsterFactory.createMonster("Pumpkin", gamePanel));
-        }
-        //Battle 2
-        if(index == 2){
-            listofMonster.add(MonsterFactory.createMonster("Reaper", gamePanel));
-            listofMonster.add(MonsterFactory.createMonster("Pumpkin", gamePanel));
-            listofMonster.add(MonsterFactory.createMonster("Reaper", gamePanel));
-        }
-        //Battle 3
-        if(index == 3){
-            listofMonster.add(MonsterFactory.createMonster("GhostRider", gamePanel));
-            listofMonster.add(MonsterFactory.createMonster("Pumpkin", gamePanel));
-        }
-        //Battle 2 in map 1
-        if(index == 4) {
-            listofMonster.add(MonsterFactory.createMonster("Bloody Slime", gamePanel));
-
-        }
-        if(index == 5) {
-            listofMonster.add(MonsterFactory.createMonster("Spider", gamePanel));
-
-        }
-        if(index == 6) {
-            listofMonster.add( MonsterFactory.createMonster("Gate Keeper", gamePanel));
-
-        }
-        //Battle 3 in map 1 for boss
-        if(index == 10) {
-            listofMonster.add(MonsterFactory.createMonster("Boss", gamePanel));
-        }
-        if(index == 9) {
-            listofMonster.add(MonsterFactory.createMonster("Green Dragon", gamePanel));
-        }
-        if(index == 7) {
-            listofMonster.add(MonsterFactory.createMonster("Robot", gamePanel));
-        }
-        if(index == 8) {
-            listofMonster.add(MonsterFactory.createMonster("Robot", gamePanel));
-        }
-    }
-    // Monster Turn
-    public void monsterTurn(){
-        if((orderTurn - 1) >= listofMonster.size()) {
-            orderTurn = 0;
-            interactType = 0;
-            selectAction = 0;
-            choosingEquipAction = 0;
-            choosingEnemyAction = 0;
-        }
-        else{
-            if(listofMonster.get(orderTurn - 1).preState == listofMonster.get(orderTurn - 1).stunState){
-                listofMonster.get(orderTurn - 1).preState = listofMonster.get(orderTurn - 1).normalState;
-                orderTurn++;
-            }
-            else{
-                
-                if(listofMonster.get(orderTurn-1).dying == false){
-                    if(listofMonster.get(orderTurn - 1).preState == listofMonster.get(orderTurn - 1).bleedState){
-                        listofMonster.get(orderTurn - 1).life--;
-                        listofMonster.get(orderTurn - 1).preState = listofMonster.get(orderTurn - 1).normalState;
-                    }
-                    listofMonster.get(orderTurn - 1).damage(gamePanel.player);
-                }
-                else{
-                orderTurn++;
-                }
-            }
-            if(gamePanel.player.life <= 0) gamePanel.player.dying = true;
-        }
-    }
-
+    
+/* 
     public void drawBattleBossScreen() {
 
             //DRAW BACKGROUND
@@ -1367,19 +1254,11 @@ public class UI {
                 gamePanel.gameState = gamePanel.playState;
             }
 
-    }
-    // RESET THE BATTLE COMMAND NUM
-    public void resetNum(){
-        interactType = 0;
-        interactNum = 0;
-        selectAction = 0;
-        choosingEquipAction = 0;
-        choosingEnemyAction = 0;
-    }
+    }*/
     public void handlerMonsters() {
         Entity mons;
-        for (int i = 0; i < listofMonster.size(); ++i) {
-            mons = listofMonster.get(i);
+        for (int i = 0; i < gamePanel.battleSystem.listofMonster.size(); ++i) {
+            mons = gamePanel.battleSystem.listofMonster.get(i);
             if (mons instanceof MON_GateKeeper) {
                 gamePanel.ui.gateCounterKill++;
                 gamePanel.monster[1][0].defeat = true;
@@ -1411,28 +1290,26 @@ public class UI {
             }
         }
     }
-
-
     // Checking the state of all entities in the battle
     public void checkEffect(){
-        effect = false;
+       effect = false;
         if(gamePanel.player.state != gamePanel.player.normalState){
-            effect = true;
+           effect = true;
             effectted = gamePanel.player;
             effecttedNo = 0;
             gamePanel.player.preState = gamePanel.player.state;
         }
         else{
-            for(int i=0;i<listofMonster.size();i++){
-                if(listofMonster.get(i) != null && listofMonster.get(i).state != listofMonster.get(i).normalState){
-                    effect = true;
-                    effectted = listofMonster.get(i);
+            for(int i=0;i<gamePanel.battleSystem.listofMonster.size();i++){
+                if(gamePanel.battleSystem.listofMonster.get(i) != null && gamePanel.battleSystem.listofMonster.get(i).state != gamePanel.battleSystem.listofMonster.get(i).normalState){
+                   effect = true;
+                    effectted = gamePanel.battleSystem.listofMonster.get(i);
                     effecttedNo = i;
-                    listofMonster.get(i).preState = listofMonster.get(i).state;
+                    gamePanel.battleSystem.listofMonster.get(i).preState = gamePanel.battleSystem.listofMonster.get(i).state;
                 }
             }
         }
-    }
+}
     // Draw the effect
     public void drawEffect(){
 
@@ -1443,8 +1320,8 @@ public class UI {
             }
             else if (gamePanel.effect[effectted.state - 1].effectNum == 0){
                     gamePanel.effect[effectted.state - 1].effectNum = 1;
-                    orderTurn++;
-                    effect = false;
+                    gamePanel.battleSystem.orderTurn++;
+                   effect = false;
                     resetEffect();
             }
         }
@@ -1455,23 +1332,9 @@ public class UI {
                 gamePanel.player.state = gamePanel.player.normalState;
             }
             if(effectted.type == effectted.type_monster){
-                listofMonster.get(effecttedNo).state = listofMonster.get(effecttedNo).normalState;
+                gamePanel.battleSystem.listofMonster.get(effecttedNo).state = gamePanel.battleSystem.listofMonster.get(effecttedNo).normalState;
             }
             effectted.state = effectted.normalState;
-    }
-    // Checking if the battle end or not
-    public boolean checkBattleEnd(){
-        if(gamePanel.player.dying == true){
-            return true;
-        }
-        else{
-            for(int i = 0; i<listofMonster.size();i++){
-                if(listofMonster.get(i).dying == false){
-                    return false;
-                }
-            }
-            return true;
-        }
     }
     public void drawInventory(Entity entity, boolean cursor){
 

@@ -89,6 +89,9 @@ public class GamePanel extends JPanel implements Runnable{
     public final int bossBattleState = 10;
     public final int cutScenceState = 11;
 
+    // BattleSystem call
+        public BattleSystem battleSystem = new BattleSystem(this);
+
     public boolean bossBattleOn = false;
 
 //    // Config
